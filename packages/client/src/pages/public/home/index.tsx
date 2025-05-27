@@ -49,7 +49,7 @@ const HomePage = () => {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="sticky bottom-0 space-y-2 bg-background pt-2">
           {error && <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950 p-3 rounded-md">{error}</div>}
 
           <div className="flex gap-2">
@@ -71,9 +71,8 @@ const HomePage = () => {
               </Button>
             </div>
           </div>
+          <Footer />
         </div>
-
-        <Footer />
       </div>
     </div>
   );

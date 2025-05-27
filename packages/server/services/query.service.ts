@@ -58,21 +58,42 @@ class QueryService {
     try {
       const result = await this.agent.invoke({ input: prompt });
 
+      console.log('Agent result:', JSON.stringify(result, null, 2));
+      console.log('Intermediate steps:', result.intermediateSteps?.length || 0);
+
       const response = {
         prompt,
         sqlQuery: '',
-        result: null,
+        result: null as unknown,
       };
 
-      for (const step of result.intermediateSteps) {
-        if (step.action.tool === 'query-sql') {
-          response.sqlQuery = step.action.toolInput;
-          try {
-            response.result = JSON.parse(step.observation);
-          } catch {
-            response.result = step.observation;
+      // Check if we have intermediate steps
+      if (result.intermediateSteps && result.intermediateSteps.length > 0) {
+        for (const step of result.intermediateSteps) {
+          console.log('Step:', step.action.tool, step.action.toolInput);
+          if (step.action.tool === 'query-sql') {
+            response.sqlQuery = step.action.toolInput;
+            try {
+              response.result = JSON.parse(step.observation);
+            } catch {
+              response.result = step.observation;
+            }
           }
         }
+      } else {
+        // No intermediate steps - agent didn't execute any tools
+        console.log('No intermediate steps found. Agent output:', result.output);
+        response.result = {
+          error:
+            'The query could not be processed. The agent did not generate a SQL query. Please try rephrasing your question or ask about users, products, orders, or sales data.',
+        };
+      }
+
+      // If we still don't have a result, set an error
+      if (response.result === null) {
+        response.result = {
+          error: 'No data returned from the query. Please check if the requested data exists in the database.',
+        };
       }
 
       return response;

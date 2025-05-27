@@ -1,7 +1,10 @@
+import type { DataAnalysis } from '@/lib/data-analyzer';
+
 export interface SqlQueryResponse {
   prompt: string;
   sqlQuery: string;
   result: Record<string, unknown>[] | { error: string };
+  analysis?: DataAnalysis;
 }
 
 export interface AiChatMessage {

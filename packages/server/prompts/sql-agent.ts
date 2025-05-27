@@ -15,11 +15,22 @@ CRITICAL POSTGRESQL SYNTAX RULES:
 - Table "order" is a reserved word and MUST be quoted as "order"
 - Column names do not need quotes
 
+TABLE RELATIONSHIPS:
+- "order" table links to "user" via userid column
+- "order_item" table links to "order" via orderid column  
+- "order_item" table links to "product" via productid column
+- To find best selling products, you need to JOIN "order_item" with "product" and SUM quantities
+
 CORRECT EXAMPLES:
 - SELECT name, email FROM "user" LIMIT 10;
 - SELECT name, price FROM "product" WHERE price > 100;
 - SELECT * FROM "order" WHERE userid = 1;
 - SELECT quantity FROM "order_item" WHERE orderid = 1;
+
+EXAMPLES FOR SALES ANALYSIS:
+- Best selling products: SELECT p.name, SUM(oi.quantity) as total_sold FROM "product" p JOIN "order_item" oi ON p.id = oi.productid GROUP BY p.id, p.name ORDER BY total_sold DESC LIMIT 3;
+- Orders by user: SELECT u.name, COUNT(o.id) as order_count FROM "user" u JOIN "order" o ON u.id = o.userid GROUP BY u.id, u.name ORDER BY order_count DESC;
+- Product revenue: SELECT p.name, SUM(oi.quantity * p.price) as revenue FROM "product" p JOIN "order_item" oi ON p.id = oi.productid GROUP BY p.id, p.name ORDER BY revenue DESC;
 
 WRONG EXAMPLES (DO NOT USE):
 - SELECT name FROM user; (missing quotes around user)
@@ -31,4 +42,11 @@ Available tables and columns:
 - "order": id, userid, createdat
 - "order_item": id, orderid, productid, quantity
 
-If the question does not seem related to the database, just return "I don't know" as the answer.`;
+IMPORTANT: When asked about "best selling products", "top products", "most popular products", you MUST:
+1. JOIN "product" with "order_item" tables
+2. GROUP BY product information
+3. SUM the quantities to get total sales
+4. ORDER BY total sales DESC
+5. Use LIMIT to get top results
+
+If you cannot understand the question or it's not related to the database, respond with "I cannot process this query. Please ask about users, products, orders, or sales data."`;
