@@ -28,31 +28,12 @@ export interface DataInsight {
   value?: number | string;
 }
 
-export interface SqlQueryResponse {
+export interface EnhancedQueryResponse {
   prompt: string;
   sqlQuery: string;
-  result: Record<string, unknown>[] | { error: string };
+  result: unknown;
   chartRecommendation: ChartRecommendation | null;
   conversationalResponse: string;
   insights: DataInsight[];
   executionTime?: number;
-}
-
-export interface AiChatMessage {
-  id: string;
-  timestamp: Date;
-  userPrompt: string;
-  response: SqlQueryResponse;
-}
-
-export interface AiChatState {
-  messages: AiChatMessage[];
-  loading: boolean;
-  error: string | null;
-}
-
-export interface AiChatStore extends AiChatState {
-  sendMessage: (message: string) => Promise<void>;
-  resetMessages: () => void;
-  clearError: () => void;
 }

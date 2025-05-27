@@ -1,4 +1,3 @@
-import React from 'react';
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 

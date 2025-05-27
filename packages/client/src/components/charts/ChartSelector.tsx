@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { BarChart3, LineChart, PieChart, ScatterChart, AreaChart, BarChart } from 'lucide-react';
-import type { ChartConfig, ChartType } from '@/lib/data-analyzer';
+import type { ChartConfig, ChartType } from '@/lib/chart-types';
 
 interface ChartSelectorProps {
   suggestedCharts: ChartConfig[];

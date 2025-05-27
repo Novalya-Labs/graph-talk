@@ -3,7 +3,7 @@ import { ChartContainer } from '@/components/ui/chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp } from 'lucide-react';
-import type { ChartConfig } from '@/lib/data-analyzer';
+import type { ChartConfig } from '@/lib/chart-types';
 
 // Import chart types
 import { BarChartComponent } from './chart-types/BarChart';
@@ -23,7 +23,7 @@ interface ChartRendererProps {
 }
 
 export function ChartRenderer({ data, config, showExportToolbar = true, className }: ChartRendererProps) {
-  const chartRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement | null>(null);
 
   const renderChart = () => {
     const chartConfig = {
@@ -31,16 +31,13 @@ export function ChartRenderer({ data, config, showExportToolbar = true, classNam
         label: config.xAxis.label,
         color: config.series[0]?.color || 'hsl(var(--chart-1))',
       },
-      ...config.series.reduce(
-        (acc, series) => ({
-          ...acc,
-          [series.key]: {
-            label: series.name,
-            color: series.color || 'hsl(var(--chart-1))',
-          },
-        }),
-        {},
-      ),
+      ...config.series.reduce((acc: Record<string, { label: string; color: string }>, series) => {
+        acc[series.key] = {
+          label: series.name,
+          color: series.color || 'hsl(var(--chart-1))',
+        };
+        return acc;
+      }, {}),
     };
 
     const commonProps = {

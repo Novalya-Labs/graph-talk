@@ -1,17 +1,42 @@
 import { SqlDatabase } from 'langchain/sql_db';
-import { createSqlAgent, SqlToolkit } from 'langchain/agents/toolkits/sql';
 import { ChatOpenAI } from '@langchain/openai';
 import { AppDataSource } from '@/configs/database';
 import { z } from 'zod';
 import { Env } from '@/configs/env';
-import { AgentExecutor } from 'langchain/dist/agents/executor';
 import { sqlAgentPrompt } from '@/prompts/sql-agent';
+import { analysisService } from '@/services/analysis.service';
+import type { EnhancedQueryResponse } from '@/types/analysis.types';
 
 class QueryService {
-  private agent: AgentExecutor | null = null;
+  private db: SqlDatabase | null = null;
 
   async initialize() {
-    if (this.agent) return;
+    if (this.db) return;
+
+    this.db = await SqlDatabase.fromDataSourceParams({
+      appDataSource: AppDataSource,
+      includesTables: ['user', 'product', 'order', 'order_item'],
+      customDescription: {
+        user: 'Table name: "user" (must be quoted). Contains user information with columns: id (integer), name (varchar), email (varchar). Example: SELECT name, email FROM "user" LIMIT 10;',
+        product:
+          'Table name: "product". Contains product information with columns: id (integer), name (varchar), description (varchar), price (decimal). Example: SELECT name, price FROM "product" WHERE price > 100;',
+        order:
+          'Table name: "order" (must be quoted). Contains order information with columns: id (integer), userId (integer), createdAt (date). Example: SELECT * FROM "order" LIMIT 10;',
+        order_item:
+          'Table name: "order_item". Contains order item information with columns: id (integer), orderId (integer), productId (integer), quantity (integer). Example: SELECT * FROM "order_item" LIMIT 10;',
+      },
+    });
+  }
+
+  async getQueryResult(prompt: string): Promise<EnhancedQueryResponse> {
+    const startTime = Date.now();
+
+    await this.initialize();
+
+    if (!this.db) throw new Error('Database not initialized');
+
+    const promptSchema = z.string().min(2);
+    promptSchema.parse(prompt);
 
     const llm = new ChatOpenAI({
       temperature: 0,
@@ -20,95 +45,35 @@ class QueryService {
       maxTokens: 1000,
     });
 
-    const db = await SqlDatabase.fromDataSourceParams({
-      appDataSource: AppDataSource,
-      includesTables: ['user', 'product', 'order', 'order_item'],
-      customDescription: {
-        user: 'Table name: "user" (must be quoted). Contains user information with columns: id (integer), name (varchar), email (varchar). Example: SELECT name, email FROM "user" LIMIT 10;',
-        product:
-          'Table name: "product". Contains product information with columns: id (integer), name (varchar), description (varchar), price (decimal). Example: SELECT name, price FROM "product" WHERE price > 100;',
-        order:
-          'Table name: "order" (must be quoted). Contains order information with columns: id (integer), userid (integer), createdat (date). Example: SELECT * FROM "order" LIMIT 10;',
-        order_item:
-          'Table name: "order_item". Contains order item information with columns: id (integer), orderid (integer), productid (integer), quantity (integer). Example: SELECT * FROM "order_item" LIMIT 10;',
-      },
-    });
-
-    const toolkit = new SqlToolkit(db);
-
-    const agent = createSqlAgent(llm, toolkit, {
-      prefix: sqlAgentPrompt,
-    });
-
-    this.agent = agent;
-  }
-
-  async getQueryResult(prompt: string): Promise<{
-    prompt: string;
-    sqlQuery: string;
-    result: unknown;
-  }> {
-    await this.initialize();
-
-    if (!this.agent) throw new Error('Agent not initialized');
-
-    const promptSchema = z.string().min(2);
-    promptSchema.parse(prompt);
-
     try {
-      const result = await this.agent.invoke({ input: prompt });
+      const sqlGenerationPrompt = sqlAgentPrompt(prompt);
 
-      console.log('Agent result:', JSON.stringify(result, null, 2));
-      console.log('Intermediate steps:', result.intermediateSteps?.length || 0);
+      const sqlResponse = await llm.invoke(sqlGenerationPrompt);
+      let sqlQuery = sqlResponse.content as string;
 
-      const response = {
-        prompt,
-        sqlQuery: '',
-        result: null as unknown,
-      };
+      sqlQuery = sqlQuery
+        .trim()
+        .replace(/^```sql\s*/, '')
+        .replace(/\s*```$/, '');
 
-      // Check if we have intermediate steps
-      if (result.intermediateSteps && result.intermediateSteps.length > 0) {
-        for (const step of result.intermediateSteps) {
-          console.log('Step:', step.action.tool, step.action.toolInput);
-          if (step.action.tool === 'query-sql') {
-            response.sqlQuery = step.action.toolInput;
-            try {
-              response.result = JSON.parse(step.observation);
-            } catch {
-              response.result = step.observation;
-            }
-          }
-        }
-      } else {
-        // No intermediate steps - agent didn't execute any tools
-        console.log('No intermediate steps found. Agent output:', result.output);
-        response.result = {
-          error:
-            'The query could not be processed. The agent did not generate a SQL query. Please try rephrasing your question or ask about users, products, orders, or sales data.',
-        };
-      }
+      const result = await this.db.run(sqlQuery);
+      const parsedResult = JSON.parse(result);
 
-      // If we still don't have a result, set an error
-      if (response.result === null) {
-        response.result = {
-          error: 'No data returned from the query. Please check if the requested data exists in the database.',
-        };
-      }
+      const executionTime = Date.now() - startTime;
 
-      return response;
+      const enhancedResponse = await analysisService.analyzeQueryResult(prompt, sqlQuery, parsedResult, executionTime);
+
+      return enhancedResponse;
     } catch (error) {
       console.error('Error in getQueryResult:', error);
+      const executionTime = Date.now() - startTime;
 
-      if (error instanceof Error && error.message.includes('Could not parse LLM output')) {
-        return {
-          prompt,
-          sqlQuery: '',
-          result: { error: 'Unable to process the query. Please try rephrasing your question.' },
-        };
-      }
-
-      throw error;
+      return await analysisService.analyzeQueryResult(
+        prompt,
+        '',
+        { error: `Query execution failed: ${error instanceof Error ? error.message : 'Unknown error'}` },
+        executionTime,
+      );
     }
   }
 }

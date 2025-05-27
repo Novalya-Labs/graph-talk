@@ -12,7 +12,7 @@ import { useChartExport } from '@/hooks/use-chart-export';
 import { getExportButtonConfig } from '@/lib/universal-export';
 
 interface ChartExportToolbarProps {
-  chartRef: React.RefObject<HTMLDivElement>;
+  chartRef: React.RefObject<HTMLDivElement | null>;
   data: Record<string, unknown>[];
   chartTitle: string;
 }
