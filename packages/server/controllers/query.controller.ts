@@ -11,16 +11,11 @@ class QueryController {
     try {
       const sql = await queryService.getQueryResult(prompt);
 
-      if (!/^select\s/i.test(sql.trim())) {
-        return res.status(400).json({ error: 'Requête non autorisée.' });
-      }
+      console.log({ sql });
 
-      const [rows] = await AppDataSource.query(sql);
+      if (!sql) return res.json({ rawSql: sql, data: [] });
 
-      res.json({
-        rawSql: sql,
-        data: rows,
-      });
+      res.json(sql);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Erreur lors de la génération ou l'exécution SQL." });

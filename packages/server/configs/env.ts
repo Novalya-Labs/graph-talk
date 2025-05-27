@@ -5,4 +5,5 @@ export const Env = {
   DB_USER: process.env.DB_USER || 'postgres',
   DB_PASS: process.env.DB_PASS || 'postgres',
   DB_NAME: process.env.DB_NAME || 'graph-talk',
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
 };

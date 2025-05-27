@@ -1,90 +1,10 @@
 import 'reflect-metadata';
-import { DataSource, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Env } from './configs/env';
-
-// ---------- Entities ----------
-@Entity()
-class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column()
-  name!: string;
-
-  @Column()
-  email!: string;
-}
-
-@Entity()
-class Product {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column()
-  name!: string;
-
-  @Column()
-  description!: string;
-
-  @Column('decimal')
-  price!: number;
-}
-
-@Entity()
-class Order {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @ManyToOne(
-    () => User,
-    (user) => user.id,
-  )
-  user!: User;
-
-  @Column()
-  createdAt!: Date;
-
-  @OneToMany(
-    () => OrderItem,
-    (item) => item.order,
-  )
-  items!: OrderItem[];
-}
-
-@Entity()
-class OrderItem {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @ManyToOne(
-    () => Order,
-    (order) => order.items,
-  )
-  order!: Order;
-
-  @ManyToOne(
-    () => Product,
-    (product) => product.id,
-  )
-  product!: Product;
-
-  @Column()
-  quantity!: number;
-}
-
-// ---------- Data Source ----------
-const AppDataSource = new DataSource({
-  type: 'postgres',
-  host: Env.DB_HOST,
-  port: Number(Env.DB_PORT),
-  username: Env.DB_USER,
-  password: Env.DB_PASS,
-  database: Env.DB_NAME,
-  synchronize: true,
-  logging: false,
-  entities: [User, Product, Order, OrderItem],
-});
+import { User } from './entities/User';
+import { AppDataSource } from './configs/database';
+import { Product } from './entities/Product';
+import { Order } from './entities/Order';
+import { OrderItem } from './entities/OrderItem';
 
 // ---------- Seeding Function ----------
 const seed = async () => {

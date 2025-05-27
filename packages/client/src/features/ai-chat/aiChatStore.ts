@@ -38,8 +38,6 @@ export const useAiChatStore = create<AiChatStore>()(
       name: `ai-chat-storage-${env.app.appKey}`,
       partialize: (state) => ({
         messages: state.messages,
-        loading: state.loading,
-        error: state.error,
       }),
     },
   ),
