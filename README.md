@@ -103,7 +103,7 @@ yarn dev:client
 ```
 
 7. **Open your browser**
-Navigate to `http://localhost:5173` and start asking questions!
+Navigate to `http://localhost:3333` and start asking questions!
 
 ## 💡 Example Queries
 
