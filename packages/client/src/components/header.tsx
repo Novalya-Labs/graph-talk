@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { useAiChatStore } from '@/features/ai-chat/aiChatStore';
 
 export const Header: React.FC = () => {
-  const { messages } = useAiChatStore();
+  const { messages, resetMessages } = useAiChatStore();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-background">
@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
         </div>
         <div className="flex-1 flex justify-end">
           {messages.length > 0 && (
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" onClick={resetMessages}>
               <TrashIcon className="size-4" />
             </Button>
           )}
