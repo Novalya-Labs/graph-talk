@@ -24,12 +24,13 @@ class QueryService {
       appDataSource: AppDataSource,
       includesTables: ['user', 'product', 'order', 'order_item'],
       customDescription: {
-        user: 'Contains user information with columns: id (integer), name (varchar), email (varchar)',
+        user: 'Table name: "user" (must be quoted). Contains user information with columns: id (integer), name (varchar), email (varchar). Example: SELECT name, email FROM "user" LIMIT 10;',
         product:
-          'Contains product information with columns: id (integer), name (varchar), description (varchar), price (decimal)',
-        order: 'Contains order information with columns: id (integer), userId (integer), createdAt (date)',
+          'Table name: "product". Contains product information with columns: id (integer), name (varchar), description (varchar), price (decimal). Example: SELECT name, price FROM "product" WHERE price > 100;',
+        order:
+          'Table name: "order" (must be quoted). Contains order information with columns: id (integer), userid (integer), createdat (date). Example: SELECT * FROM "order" LIMIT 10;',
         order_item:
-          'Contains order item information with columns: id (integer), orderId (integer), productId (integer), quantity (integer)',
+          'Table name: "order_item". Contains order item information with columns: id (integer), orderid (integer), productid (integer), quantity (integer). Example: SELECT * FROM "order_item" LIMIT 10;',
       },
     });
 

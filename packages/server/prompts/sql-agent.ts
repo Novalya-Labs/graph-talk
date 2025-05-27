@@ -9,14 +9,26 @@ You MUST double check your query before executing it. If you get an error queryi
 
 DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
 
-When writing SQL queries for PostgreSQL:
-- Use lowercase table and column names without quotes when possible
-- If you must use quotes, use double quotes like "table_name" 
-- Do not escape quotes with backslashes
-- Table names: user, product, order, order_item
-- User table columns: id, name, email
-- Product table columns: id, name, description, price  
-- Order table columns: id, userid, createdat
-- Order_item table columns: id, orderid, productid, quantity
+CRITICAL POSTGRESQL SYNTAX RULES:
+- ALWAYS use double quotes around ALL table names
+- Table "user" is a reserved word and MUST be quoted as "user"
+- Table "order" is a reserved word and MUST be quoted as "order"
+- Column names do not need quotes
+
+CORRECT EXAMPLES:
+- SELECT name, email FROM "user" LIMIT 10;
+- SELECT name, price FROM "product" WHERE price > 100;
+- SELECT * FROM "order" WHERE userid = 1;
+- SELECT quantity FROM "order_item" WHERE orderid = 1;
+
+WRONG EXAMPLES (DO NOT USE):
+- SELECT name FROM user; (missing quotes around user)
+- SELECT * FROM order; (missing quotes around order)
+
+Available tables and columns:
+- "user": id, name, email
+- "product": id, name, description, price  
+- "order": id, userid, createdat
+- "order_item": id, orderid, productid, quantity
 
 If the question does not seem related to the database, just return "I don't know" as the answer.`;
