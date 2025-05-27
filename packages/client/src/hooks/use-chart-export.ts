@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { exportChart, exportData, generateExportFilename, type ExportFormat, type ExportOptions } from '@/lib/universal-export';
 import { useToast } from '@/hooks/use-toast';
 
 export function useChartExport() {
   const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation('export');
 
   const exportChartElement = useCallback(async (
     element: HTMLElement | null,
@@ -14,8 +16,8 @@ export function useChartExport() {
   ) => {
     if (!element) {
       toast({
-        title: 'Export Error',
-        description: 'Chart element not found',
+        title: t('error.title'),
+        description: t('error.chartNotFound'),
         variant: 'destructive',
       });
       return;
@@ -28,24 +30,25 @@ export function useChartExport() {
       await exportChart(element, format, {
         ...options,
         filename,
-        title: chartTitle,
+        title: chartTitle || t('defaultTitle'),
+        generatedOnText: t('generatedOn'),
       });
       
       toast({
-        title: 'Export Successful',
-        description: `Chart exported as ${format.toUpperCase()}`,
+        title: t('success.title'),
+        description: t('success.chartExported', { format: format.toUpperCase() }),
       });
     } catch (error) {
       console.error('Export failed:', error);
       toast({
-        title: 'Export Failed',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        title: t('failed.title'),
+        description: error instanceof Error ? error.message : t('error.unknown'),
         variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
     }
-  }, [toast]);
+  }, [toast, t]);
 
   const exportChartData = useCallback(async (
     data: Record<string, unknown>[],
@@ -54,8 +57,8 @@ export function useChartExport() {
   ) => {
     if (!data || data.length === 0) {
       toast({
-        title: 'Export Error',
-        description: 'No data to export',
+        title: t('error.title'),
+        description: t('error.noData'),
         variant: 'destructive',
       });
       return;
@@ -68,20 +71,20 @@ export function useChartExport() {
       await exportData(data, format, filename);
       
       toast({
-        title: 'Export Successful',
-        description: `Data exported as ${format.toUpperCase()}`,
+        title: t('success.title'),
+        description: t('success.dataExported', { format: format.toUpperCase() }),
       });
     } catch (error) {
       console.error('Data export failed:', error);
       toast({
-        title: 'Export Failed',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        title: t('failed.title'),
+        description: error instanceof Error ? error.message : t('error.unknown'),
         variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
     }
-  }, [toast]);
+  }, [toast, t]);
 
   return {
     exportChartElement,

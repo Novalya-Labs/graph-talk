@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -22,17 +23,9 @@ const CHART_ICONS: Record<ChartType, React.ComponentType<{ className?: string }>
   heatmap: BarChart3,
 };
 
-const CHART_LABELS: Record<ChartType, string> = {
-  bar: 'Barres',
-  line: 'Ligne',
-  pie: 'Secteurs',
-  scatter: 'Nuage de points',
-  area: 'Aires',
-  composed: 'Mixte',
-  heatmap: 'Carte de chaleur',
-};
-
 export function ChartSelector({ suggestedCharts, selectedChart, onChartChange, confidence }: ChartSelectorProps) {
+  const { t } = useTranslation('charts');
+
   if (suggestedCharts.length <= 1) return null;
 
   const getConfidenceColor = (conf: number) => {
@@ -44,10 +37,10 @@ export function ChartSelector({ suggestedCharts, selectedChart, onChartChange, c
   return (
     <div className="flex items-center gap-3 mb-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">Type de graphique:</span>
+        <span className="text-sm font-medium">{t('selector.chartType')}</span>
         <Badge variant="outline" className="gap-1">
           <div className={`w-2 h-2 rounded-full ${getConfidenceColor(confidence)}`} />
-          {Math.round(confidence * 100)}% confiance
+          {Math.round(confidence * 100)}% {t('selector.confidence')}
         </Badge>
       </div>
 
@@ -68,7 +61,7 @@ export function ChartSelector({ suggestedCharts, selectedChart, onChartChange, c
               <SelectItem key={chart.type} value={chart.type}>
                 <div className="flex items-center gap-2">
                   <Icon className="size-4" />
-                  <span>{CHART_LABELS[chart.type]}</span>
+                  <span>{t(`types.${chart.type}`)}</span>
                 </div>
               </SelectItem>
             );

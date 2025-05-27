@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAiChatStore } from '@/features/ai-chat/aiChatStore';
 import { SqlResultDisplay } from '@/features/ai-chat/components/SqlResultDisplay';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { ArrowUpIcon, Database, Loader2 } from 'lucide-react';
 
 const HomePage = () => {
   const [input, setInput] = useState('');
+  const { t } = useTranslation('home');
 
   const { messages, sendMessage, loading, error, clearError } = useAiChatStore();
 
@@ -34,10 +36,8 @@ const HomePage = () => {
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <Database className="size-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Commencez par poser une question sur vos données</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Exemple: "Liste moi les utilisateurs" ou "Quels sont les produits les plus chers ?"
-                </p>
+                <p className="text-muted-foreground">{t('emptyState.title')}</p>
+                <p className="text-sm text-muted-foreground mt-2">{t('emptyState.example')}</p>
               </div>
             </div>
           ) : (
@@ -57,7 +57,7 @@ const HomePage = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Posez votre question en langage naturel..."
+              placeholder={t('placeholder')}
               className="flex-1 min-h-[60px] resize-none"
               disabled={loading}
             />

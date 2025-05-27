@@ -5,7 +5,7 @@ import EN from './locales/en.json';
 import FR from './locales/fr.json';
 
 export type LocaleKey = 'en' | 'fr';
-export type Namespace = 'common' | 'home' | 'errorBoundary' | 'howItWorks';
+export type Namespace = 'common' | 'home' | 'errorBoundary' | 'charts' | 'export' | 'aiChat';
 
 export const defaultNS: Namespace = 'common';
 export const resources = {

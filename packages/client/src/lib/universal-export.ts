@@ -11,6 +11,7 @@ export interface ExportOptions {
   quality?: number;
   width?: number;
   height?: number;
+  generatedOnText?: string;
 }
 
 export async function exportChart(
@@ -18,7 +19,14 @@ export async function exportChart(
   format: ExportFormat,
   options: ExportOptions = {},
 ): Promise<void> {
-  const { filename = `chart-${Date.now()}`, title = 'Chart Export', quality = 1, width = 800, height = 600 } = options;
+  const {
+    filename = `chart-${Date.now()}`,
+    title = 'Chart Export',
+    quality = 1,
+    width = 800,
+    height = 600,
+    generatedOnText = 'Generated on:',
+  } = options;
 
   try {
     switch (format) {
@@ -26,7 +34,7 @@ export async function exportChart(
         await exportToPNG(element, filename, quality);
         break;
       case 'pdf':
-        await exportToPDF(element, filename, title, width, height);
+        await exportToPDF(element, filename, title, width, height, generatedOnText);
         break;
       case 'svg':
         await exportToSVG(element, filename);
@@ -84,6 +92,7 @@ async function exportToPDF(
   title: string,
   width: number,
   height: number,
+  generatedOnText: string,
 ): Promise<void> {
   const canvas = await html2canvas(element, {
     backgroundColor: '#ffffff',
@@ -106,7 +115,7 @@ async function exportToPDF(
 
   // Add timestamp
   pdf.setFontSize(10);
-  pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
+  pdf.text(`${generatedOnText} ${new Date().toLocaleString()}`, 20, 30);
 
   // Calculate image dimensions to fit page
   const pageWidth = pdf.internal.pageSize.getWidth();
@@ -183,37 +192,12 @@ export function generateExportFilename(chartTitle: string, _format: ExportFormat
   return `${sanitizedTitle}${timestampSuffix}`;
 }
 
-export function getExportButtonConfig() {
-  return [
-    {
-      format: 'pdf' as ExportFormat,
-      label: 'Export PDF',
-      icon: '📄',
-      description: 'Export chart as PDF document',
-    },
-    {
-      format: 'png' as ExportFormat,
-      label: 'Export PNG',
-      icon: '🖼️',
-      description: 'Export chart as PNG image',
-    },
-    {
-      format: 'svg' as ExportFormat,
-      label: 'Export SVG',
-      icon: '🎨',
-      description: 'Export chart as SVG vector',
-    },
-    {
-      format: 'csv' as ExportFormat,
-      label: 'Export CSV',
-      icon: '📊',
-      description: 'Export data as CSV file',
-    },
-    {
-      format: 'json' as ExportFormat,
-      label: 'Export JSON',
-      icon: '📋',
-      description: 'Export data as JSON file',
-    },
-  ];
-}
+export const EXPORT_FORMATS = ['pdf', 'png', 'svg', 'csv', 'json'] as const;
+
+export const EXPORT_ICONS: Record<ExportFormat, string> = {
+  pdf: '📄',
+  png: '🖼️',
+  svg: '🎨',
+  csv: '📊',
+  json: '📋',
+};

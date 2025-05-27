@@ -14,28 +14,74 @@
   },
   "home": {
     "title": "Graph Talk",
-    "subtitle": "Talk to your database, get answers, graph your data"
-  },
-  "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Learn about our platform and how we help you graph your data",
-    "steps": {
-      "createAccount": {
-        "title": "Create an Account",
-        "description": "Sign up as a citizen or administrator to access the platform's features"
-      },
-      "submitRequests": {
-        "title": "Submit Requests",
-        "description": "Citizens can easily submit and track their administrative requests"
-      },
-      "getUpdates": {
-        "title": "Get Updates",
-        "description": "Receive real-time updates and notifications about your requests' status"
-      }
-    },
-    "cta": {
-      "title": "Ready to get started?",
-      "button": "Sign Up Now"
+    "subtitle": "Talk to your database, get answers, graph your data",
+    "placeholder": "Ask your question in natural language...",
+    "emptyState": {
+      "title": "Start by asking a question about your data",
+      "example": "Example: \"List users\" or \"What are the most expensive products?\""
     }
+  },
+  "charts": {
+    "types": {
+      "bar": "Bar",
+      "line": "Line",
+      "pie": "Pie",
+      "scatter": "Scatter",
+      "area": "Area",
+      "composed": "Mixed",
+      "heatmap": "Heatmap"
+    },
+    "selector": {
+      "chartType": "Chart type:",
+      "confidence": "confidence"
+    },
+    "tabs": {
+      "chart": "Chart",
+      "table": "Table"
+    }
+  },
+  "export": {
+    "button": "Export",
+    "defaultTitle": "Chart Export",
+    "generatedOn": "Generated on:",
+    "formats": {
+      "pdf": "Export PDF",
+      "png": "Export PNG",
+      "svg": "Export SVG",
+      "csv": "Export CSV",
+      "json": "Export JSON"
+    },
+    "descriptions": {
+      "pdf": "Export chart as PDF document",
+      "png": "Export chart as PNG image",
+      "svg": "Export chart as SVG vector",
+      "csv": "Export data as CSV file",
+      "json": "Export data as JSON file"
+    },
+    "error": {
+      "title": "Export Error",
+      "chartNotFound": "Chart element not found",
+      "noData": "No data to export",
+      "unknown": "Unknown error occurred"
+    },
+    "success": {
+      "title": "Export Successful",
+      "chartExported": "Chart exported as {{format}}",
+      "dataExported": "Data exported as {{format}}"
+    },
+    "failed": {
+      "title": "Export Failed"
+    }
+  },
+  "aiChat": {
+    "query": "Query: {{prompt}}",
+    "noSqlGenerated": "No SQL query generated",
+    "executedIn": "Executed in {{time}}ms",
+    "error": "Error",
+    "noResult": "No result",
+    "noResultMessage": "No result returned. Please rephrase your question.",
+    "queryNoResult": "The query returned no results.",
+    "results": "{{count}} result(s)",
+    "recommendation": "Recommendation:"
   }
 }

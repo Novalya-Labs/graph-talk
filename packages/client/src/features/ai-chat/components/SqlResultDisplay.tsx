@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Code, BarChart3, Table as TableIcon, Clock, Lightbulb } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { AiChatMessage, ChartRecommendation } from '../aiChatType';
 import { ChartRenderer } from '@/components/charts/ChartRenderer';
 import { convertToChartConfig } from '@/lib/chart-utils';
@@ -12,6 +13,8 @@ interface SqlResultDisplayProps {
 }
 
 export const SqlResultDisplay = ({ message }: SqlResultDisplayProps) => {
+  const { t } = useTranslation('aiChat');
+  const { t: tCharts } = useTranslation('charts');
   const { userPrompt, response } = message;
   const { sqlQuery, result, chartRecommendation, conversationalResponse, insights, executionTime } = response;
 
@@ -53,15 +56,15 @@ export const SqlResultDisplay = ({ message }: SqlResultDisplayProps) => {
       <CardHeader>
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <Code className="size-4" />
-          Requête: {userPrompt}
+          {t('query', { prompt: userPrompt })}
         </CardTitle>
         <div className="text-xs text-muted-foreground font-mono bg-muted p-2 rounded">
-          {sqlQuery || 'Aucune requête SQL générée'}
+          {sqlQuery || t('noSqlGenerated')}
         </div>
         {executionTime && (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="size-3" />
-            Exécuté en {executionTime}ms
+            {t('executedIn', { time: executionTime })}
           </div>
         )}
       </CardHeader>
@@ -88,28 +91,28 @@ export const SqlResultDisplay = ({ message }: SqlResultDisplayProps) => {
         {isError ? (
           <div className="text-red-500 text-sm">
             <Badge variant="destructive" className="mb-2">
-              Erreur
+              {t('error')}
             </Badge>
             <p>{(result as { error: string }).error}</p>
           </div>
         ) : isNullResult ? (
           <div className="text-red-500 text-sm">
             <Badge variant="destructive" className="mb-2">
-              Erreur
+              {t('error')}
             </Badge>
-            <p>Aucun résultat retourné. Veuillez reformuler votre question.</p>
+            <p>{t('noResultMessage')}</p>
           </div>
         ) : data.length === 0 ? (
           <div className="text-muted-foreground text-sm">
             <Badge variant="secondary" className="mb-2">
-              Aucun résultat
+              {t('noResult')}
             </Badge>
-            <p>La requête n'a retourné aucun résultat.</p>
+            <p>{t('queryNoResult')}</p>
           </div>
         ) : (
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Badge variant="default">{data.length} résultat(s)</Badge>
+              <Badge variant="default">{t('results', { count: data.length })}</Badge>
               {shouldShowChart && chartRecommendation && (
                 <Badge variant="outline" className="gap-1">
                   <BarChart3 className="size-3" />
@@ -121,18 +124,18 @@ export const SqlResultDisplay = ({ message }: SqlResultDisplayProps) => {
             {shouldShowChart && chartRecommendation ? (
               <div className="space-y-4">
                 <div className="text-xs text-muted-foreground p-2 bg-muted rounded">
-                  <strong>Recommandation:</strong> {chartRecommendation.reasoning}
+                  <strong>{t('recommendation')}</strong> {chartRecommendation.reasoning}
                 </div>
 
                 <Tabs defaultValue="chart" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="chart" className="flex items-center gap-2">
                       <BarChart3 className="size-4" />
-                      Graphique
+                      {tCharts('tabs.chart')}
                     </TabsTrigger>
                     <TabsTrigger value="table" className="flex items-center gap-2">
                       <TableIcon className="size-4" />
-                      Tableau
+                      {tCharts('tabs.table')}
                     </TabsTrigger>
                   </TabsList>
 

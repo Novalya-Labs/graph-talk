@@ -14,28 +14,74 @@
   },
   "home": {
     "title": "Graph Talk",
-    "subtitle": "Parlez à votre base de données, obtenez des réponses, graphisez vos données"
-  },
-  "howItWorks": {
-    "title": "Comment Ça Marche",
-    "subtitle": "Découvrez notre plateforme et comment nous aidons à graphiser vos données",
-    "steps": {
-      "createAccount": {
-        "title": "Créer un Compte",
-        "description": "Inscrivez-vous en tant que citoyen ou administrateur pour accéder aux fonctionnalités de la plateforme"
-      },
-      "submitRequests": {
-        "title": "Soumettre des Demandes",
-        "description": "Les citoyens peuvent facilement soumettre et suivre leurs demandes administratives"
-      },
-      "getUpdates": {
-        "title": "Recevoir des Mises à Jour",
-        "description": "Recevez des mises à jour en temps réel et des notifications sur le statut de vos demandes"
-      }
-    },
-    "cta": {
-      "title": "Prêt à commencer ?",
-      "button": "S'inscrire Maintenant"
+    "subtitle": "Parlez à votre base de données, obtenez des réponses, graphisez vos données",
+    "placeholder": "Posez votre question en langage naturel...",
+    "emptyState": {
+      "title": "Commencez par poser une question sur vos données",
+      "example": "Exemple: \"Liste moi les utilisateurs\" ou \"Quels sont les produits les plus chers ?\""
     }
+  },
+  "charts": {
+    "types": {
+      "bar": "Barres",
+      "line": "Ligne",
+      "pie": "Secteurs",
+      "scatter": "Nuage de points",
+      "area": "Aires",
+      "composed": "Mixte",
+      "heatmap": "Carte de chaleur"
+    },
+    "selector": {
+      "chartType": "Type de graphique:",
+      "confidence": "confiance"
+    },
+    "tabs": {
+      "chart": "Graphique",
+      "table": "Tableau"
+    }
+  },
+  "export": {
+    "button": "Exporter",
+    "defaultTitle": "Export de Graphique",
+    "generatedOn": "Généré le :",
+    "formats": {
+      "pdf": "Exporter PDF",
+      "png": "Exporter PNG",
+      "svg": "Exporter SVG",
+      "csv": "Exporter CSV",
+      "json": "Exporter JSON"
+    },
+    "descriptions": {
+      "pdf": "Exporter le graphique en document PDF",
+      "png": "Exporter le graphique en image PNG",
+      "svg": "Exporter le graphique en vecteur SVG",
+      "csv": "Exporter les données en fichier CSV",
+      "json": "Exporter les données en fichier JSON"
+    },
+    "error": {
+      "title": "Erreur d'Export",
+      "chartNotFound": "Élément graphique non trouvé",
+      "noData": "Aucune donnée à exporter",
+      "unknown": "Erreur inconnue"
+    },
+    "success": {
+      "title": "Export Réussi",
+      "chartExported": "Graphique exporté en {{format}}",
+      "dataExported": "Données exportées en {{format}}"
+    },
+    "failed": {
+      "title": "Échec de l'Export"
+    }
+  },
+  "aiChat": {
+    "query": "Requête: {{prompt}}",
+    "noSqlGenerated": "Aucune requête SQL générée",
+    "executedIn": "Exécuté en {{time}}ms",
+    "error": "Erreur",
+    "noResult": "Aucun résultat",
+    "noResultMessage": "Aucun résultat retourné. Veuillez reformuler votre question.",
+    "queryNoResult": "La requête n'a retourné aucun résultat.",
+    "results": "{{count}} résultat(s)",
+    "recommendation": "Recommandation:"
   }
 }

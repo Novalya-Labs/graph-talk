@@ -210,20 +210,16 @@ yarn lint                # Run linter
 yarn format              # Format code
 ```
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Do what you want with this
 
 ## 🏢 About Novalya Labs
 
-Graph Talk is developed by [Novalya Labs](https://novalya.com), specializing in AI-powered business intelligence solutions.
+Graph Talk is developed by [Novalya Labs](https://novalya.dev), specializing in AI-powered business intelligence solutions.
 
 ---
 
 **Ready to transform how you interact with your data?** 🚀
 
-[Get Started](#quick-start) | [View Demo](https://graph-talk-demo.novalya.com) | [Documentation](https://docs.graph-talk.novalya.com) 
+[Get Started](#quick-start) | [View Demo](https://graph-talk-demo.novalya.dev)
