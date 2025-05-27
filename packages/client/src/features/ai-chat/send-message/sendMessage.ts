@@ -1,4 +1,6 @@
-export const sendMessage = async (prompt: string) => {
+import type { AiChatMessage, SqlQueryResponse } from '../aiChatType';
+
+export const sendMessage = async (prompt: string): Promise<AiChatMessage> => {
   const response = await fetch('/api/query', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -9,5 +11,12 @@ export const sendMessage = async (prompt: string) => {
     throw new Error('Erreur lors de la requête');
   }
 
-  return response.json();
+  const sqlResponse: SqlQueryResponse = await response.json();
+
+  return {
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    userPrompt: prompt,
+    response: sqlResponse,
+  };
 };

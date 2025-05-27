@@ -1,18 +1,24 @@
-export interface Message {
+export interface SqlQueryResponse {
+  prompt: string;
+  sqlQuery: string;
+  result: Record<string, unknown>[] | { error: string };
+}
+
+export interface AiChatMessage {
   id: string;
-  message: string;
-  sender: string;
-  sendAt: string;
+  timestamp: Date;
+  userPrompt: string;
+  response: SqlQueryResponse;
 }
 
 export interface AiChatState {
-  messages: Message[];
+  messages: AiChatMessage[];
   loading: boolean;
   error: string | null;
 }
 
-export type AiChatStore = AiChatState & {
+export interface AiChatStore extends AiChatState {
   sendMessage: (message: string) => Promise<void>;
   resetMessages: () => void;
   clearError: () => void;
-};
+}

@@ -1,70 +1,78 @@
 import { useState } from 'react';
 import { useAiChatStore } from '@/features/ai-chat/aiChatStore';
+import { SqlResultDisplay } from '@/features/ai-chat/components/SqlResultDisplay';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/footer';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowUpIcon } from 'lucide-react';
+import { ArrowUpIcon, Database, Loader2 } from 'lucide-react';
 
 const HomePage = () => {
   const [input, setInput] = useState('');
 
-  const { messages, sendMessage, loading, error } = useAiChatStore();
+  const { messages, sendMessage, loading, error, clearError } = useAiChatStore();
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
+    clearError();
     await sendMessage(input);
     setInput('');
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
-    <div className="h-screen flex flex-col px-4">
-      <div className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-y-auto">
+    <div className="h-screen flex flex-col px-4 pt-20">
+      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+        <div className="flex-1 overflow-y-auto mb-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full p-10">
-              <p>Aucun résultat encore.</p>
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <Database className="size-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">Commencez par poser une question sur vos données</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Exemple: "Liste moi les utilisateurs" ou "Quels sont les produits les plus chers ?"
+                </p>
+              </div>
             </div>
           ) : (
-            <table className="min-w-full border border-collapse">
-              <thead>
-                <tr>
-                  {Object.keys(messages[0]).map((key) => (
-                    <th key={key} className="border px-2 py-1 bg-gray-200">
-                      {key}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {messages.map((msg, idx) => (
-                  <tr key={idx}>
-                    {Object.values(msg).map((val, i) => (
-                      <td key={i} className="border px-2 py-1">
-                        {val as string}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <SqlResultDisplay key={message.id} message={message} />
+              ))}
+            </div>
           )}
         </div>
-        <div className="flex gap-2">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Écris ta requête SQL..."
-            className="flex-1"
-          />
-          <div className="flex justify-center items-center">
-            <Button onClick={handleSendMessage} disabled={loading} className="rounded-full aspect-square">
-              <ArrowUpIcon className="size-4" />
-            </Button>
+
+        <div className="space-y-2">
+          {error && <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950 p-3 rounded-md">{error}</div>}
+
+          <div className="flex gap-2">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="Posez votre question en langage naturel..."
+              className="flex-1 min-h-[60px] resize-none"
+              disabled={loading}
+            />
+            <div className="flex justify-center items-center">
+              <Button
+                onClick={handleSendMessage}
+                disabled={loading || !input.trim()}
+                className="rounded-full aspect-square h-[60px] w-[60px]"
+              >
+                {loading ? <Loader2 className="size-4 animate-spin" /> : <ArrowUpIcon className="size-4" />}
+              </Button>
+            </div>
           </div>
         </div>
 
-        {error && <p className="text-red-500">{error}</p>}
         <Footer />
       </div>
     </div>

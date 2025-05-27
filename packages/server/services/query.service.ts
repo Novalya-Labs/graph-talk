@@ -5,6 +5,7 @@ import { AppDataSource } from '@/configs/database';
 import { z } from 'zod';
 import { Env } from '@/configs/env';
 import { AgentExecutor } from 'langchain/dist/agents/executor';
+import { sqlAgentPrompt } from '@/prompts/sql-agent';
 
 class QueryService {
   private agent: AgentExecutor | null = null;
@@ -21,11 +22,22 @@ class QueryService {
 
     const db = await SqlDatabase.fromDataSourceParams({
       appDataSource: AppDataSource,
+      includesTables: ['user', 'product', 'order', 'order_item'],
+      customDescription: {
+        user: 'Contains user information with columns: id (integer), name (varchar), email (varchar)',
+        product:
+          'Contains product information with columns: id (integer), name (varchar), description (varchar), price (decimal)',
+        order: 'Contains order information with columns: id (integer), userId (integer), createdAt (date)',
+        order_item:
+          'Contains order item information with columns: id (integer), orderId (integer), productId (integer), quantity (integer)',
+      },
     });
 
     const toolkit = new SqlToolkit(db);
 
-    const agent = createSqlAgent(llm, toolkit);
+    const agent = createSqlAgent(llm, toolkit, {
+      prefix: sqlAgentPrompt,
+    });
 
     this.agent = agent;
   }
@@ -52,7 +64,6 @@ class QueryService {
       };
 
       for (const step of result.intermediateSteps) {
-        console.log(step);
         if (step.action.tool === 'query-sql') {
           response.sqlQuery = step.action.toolInput;
           try {
@@ -63,13 +74,10 @@ class QueryService {
         }
       }
 
-      console.log(`Intermediate steps ${JSON.stringify(result.intermediateSteps, null, 2)}`);
-
       return response;
     } catch (error) {
       console.error('Error in getQueryResult:', error);
 
-      // If it's an output parsing error, try to handle it gracefully
       if (error instanceof Error && error.message.includes('Could not parse LLM output')) {
         return {
           prompt,

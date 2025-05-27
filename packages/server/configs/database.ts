@@ -17,4 +17,9 @@ export const AppDataSource = new DataSource({
   entities: [User, Product, Order, OrderItem],
   migrations: [],
   subscribers: [],
+  extra: {
+    connectionTimeoutMillis: 30000,
+    idleTimeoutMillis: 30000,
+    max: 20,
+  },
 });

@@ -1,8 +1,13 @@
 import { publicRoutes } from '@/navigations/urls';
 import { Link } from 'react-router-dom';
 import Logo from '@/assets/images/logo.png';
+import { TrashIcon } from 'lucide-react';
+import { Button } from './ui/button';
+import { useAiChatStore } from '@/features/ai-chat/aiChatStore';
 
 export const Header: React.FC = () => {
+  const { messages } = useAiChatStore();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-background">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
@@ -21,7 +26,13 @@ export const Header: React.FC = () => {
             </li>
           </ul>
         </div>
-        <div className="flex-1 flex justify-end" />
+        <div className="flex-1 flex justify-end">
+          {messages.length > 0 && (
+            <Button variant="outline" size="icon">
+              <TrashIcon className="size-4" />
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );
