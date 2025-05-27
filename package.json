@@ -1,0 +1,30 @@
+{
+  "name": "graph-talk",
+  "version": "1.0.0",
+  "description": "Graph Talk",
+  "main": "index.ts",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev:client": "yarn workspace @graph-talk/client dev",
+    "dev:server": "yarn workspace @graph-talk/server dev",
+    "build:client": "yarn workspace @graph-talk/client build",
+    "build:server": "yarn workspace @graph-talk/server build",
+    "start:client": "yarn workspace @graph-talk/client preview",
+    "start:server": "yarn workspace @graph-talk/server start",
+    "lint": "biome lint .",
+    "format": "biome format . --write"
+  },
+  "keywords": ["typescript", "react", "graph-talk"],
+  "author": "Novalya Labs",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "resolutions": {
+    "typeorm": "^0.3.24"
+  }
+}

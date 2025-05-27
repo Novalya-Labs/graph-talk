@@ -1,0 +1,41 @@
+{
+  "errorBoundary": {
+    "title": "Oops! Quelque chose s'est mal passé.",
+    "subtitle": "Nous sommes désolés, mais une erreur inattendue est survenue.",
+    "button": "Retour à l'accueil"
+  },
+  "common": {
+    "notFound": {
+      "title": "404",
+      "subtitle": "Page Non Trouvée",
+      "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
+      "button": "Retour à l'accueil"
+    }
+  },
+  "home": {
+    "title": "Graph Talk",
+    "subtitle": "Parlez à votre base de données, obtenez des réponses, graphisez vos données"
+  },
+  "howItWorks": {
+    "title": "Comment Ça Marche",
+    "subtitle": "Découvrez notre plateforme et comment nous aidons à graphiser vos données",
+    "steps": {
+      "createAccount": {
+        "title": "Créer un Compte",
+        "description": "Inscrivez-vous en tant que citoyen ou administrateur pour accéder aux fonctionnalités de la plateforme"
+      },
+      "submitRequests": {
+        "title": "Soumettre des Demandes",
+        "description": "Les citoyens peuvent facilement soumettre et suivre leurs demandes administratives"
+      },
+      "getUpdates": {
+        "title": "Recevoir des Mises à Jour",
+        "description": "Recevez des mises à jour en temps réel et des notifications sur le statut de vos demandes"
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "button": "S'inscrire Maintenant"
+    }
+  }
+}

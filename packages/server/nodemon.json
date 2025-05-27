@@ -1,0 +1,5 @@
+{
+  "watch": ["configs/", "controllers/", "routes/", "entities/", "middlewares/", "validators/", "services/"],
+  "ext": "ts,json",
+  "exec": "ts-node -r tsconfig-paths/register index.ts"
+}

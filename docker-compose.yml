@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: graph-talk-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: graph-talk
+    ports:
+      - '5444:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
